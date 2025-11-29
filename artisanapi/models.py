@@ -14,6 +14,15 @@ class Person(models.Model):
     def __str__(self):
         return self.user.username
 
+class Profile(models.Model):
+    user = models.OneToOneField(Person, on_delete=models.CASCADE)
+    profile_picture = models.ImageField(upload_to='profiles/', null=True, blank=True)
+    website = models.URLField(null=True, blank=True)
+    social_links = models.JSONField(null=True, blank=True)
+
+    def __str__(self):
+        return self.user.username
+
 class Provider(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     company_name = models.CharField(max_length=255)
@@ -83,15 +92,26 @@ class Payment(models.Model):
         return f"Payment of {self.amount} for booking {self.booking.id}"
 
 
+# Other potential tables: [messages, categories, addresses, service_availabiblity, notificaton]
+class Review(models.Model):
+    booking = models.ForeignKey('Booking', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    provider = models.ForeignKey('Provider', on_delete=models.CASCADE)
+    rating = models.PositiveIntegerField()
+    comment = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
-
-
-
+    def __str__(self):
+        return f"Review by {self.user.username} for {self.provider.company_name}"
+    
 
 
 class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    services = models.ManyToManyField(Service, through='CartItem')
+    products = models.ManyToManyField(Product, through='CartItem')
     created_at = models.DateTimeField(auto_now_add=True)
+    
 
     def __str__(self):
         return f"Cart of {self.user.username} created on {self.created_at}"
@@ -105,6 +125,7 @@ class Order(models.Model):
     def __str__(self):
         return f"Order of {self.user.username} on {self.created_at}"
     
+
 class Buyer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     shipping_address = models.TextField()
@@ -114,7 +135,8 @@ class Buyer(models.Model):
 
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, blank=True)
+    service = models.ForeignKey(Service, on_delete=models.CASCADE, null=True, blank=True)
     quantity = models.PositiveIntegerField()
 
     def __str__(self):
@@ -129,3 +151,12 @@ class OrderItem(models.Model):
     def __str__(self):
         return f"{self.quantity} of {self.product.name} in order of {self.order.user.username}" 
     
+
+class SellerRating(models.Model):
+    seller = models.ForeignKey(Seller, on_delete=models.CASCADE)
+    rating = models.PositiveIntegerField()
+    review = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Rating of {self.rating} for {self.seller.store_name}"
