@@ -21,5 +21,5 @@ from artisanapi import urls as artisanapi_urls
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("api/", include(artisanapi_urls)),
+    path("", include(artisanapi_urls)),
 ]

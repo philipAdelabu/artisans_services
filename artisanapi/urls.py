@@ -24,5 +24,6 @@ router.register(r'services', views.ServiceViewSet)
 
 
 urlpatterns = [
-    path('v1/', include(router.urls)),
+    path("/", views.HomePage(), name="home-page"),
+    path('api/v1/', include(router.urls)),
 ]

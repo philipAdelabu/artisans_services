@@ -14,14 +14,20 @@ class Person(models.Model):
     def __str__(self):
         return self.user.username
 
-class Profile(models.Model):
-    user = models.OneToOneField(Person, on_delete=models.CASCADE)
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     profile_picture = models.ImageField(upload_to='profiles/', null=True, blank=True)
     website = models.URLField(null=True, blank=True)
     social_links = models.JSONField(null=True, blank=True)
 
     def __str__(self):
         return self.user.username
+
+class CompanyProfile(models.Model):
+    owner = models.OneToOneField(User, on_delete=models.CASCADE)
+    company_name = models.CharField(max_length=100)
+    description = models.TextField()
+    
 
 class Provider(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -56,6 +62,7 @@ class Service(models.Model):
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     provider = models.ForeignKey('Provider', on_delete=models.CASCADE)
+    duration = models.IntegerField(default=1)
     category = models.CharField(max_length=255)
 
     def __str__(self):
@@ -172,3 +179,46 @@ class Transaction(models.Model):
 
     def __str__(self):
         return f"Transaction of {self.amount} on {self.transaction_date}"
+    
+class History(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    description = models.TextField()
+    action = models.CharField(max_length=255)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"History of {self.user.username} - {self.action} at {self.timestamp}"
+    
+
+class Notification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    message = models.TextField()
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Notification for {self.user.username} - Read: {self.is_read}"
+    
+class ServiceCategory(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+
+    def __str__(self):
+        return self.name
+    
+class ProductCategory(models.Model):
+    name = models.CharField(max_length=50)
+    description = models.TextField()
+    created_at = models.DateTimeField(auto_now = True)
+    def __str__(self):
+        return self.name 
+    
+    
+class Feedback(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Feedback from {self.user.username} at {self.created_at}"   
+    

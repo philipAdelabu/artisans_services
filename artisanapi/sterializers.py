@@ -56,7 +56,7 @@ class ReviewSerializer(serializers.ModelSerializer):
 class ProviderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Provider
-        fields = ['id', 'user', 'company_name', 'address', 'phone_number', 'website']   
+        fields = ['id', 'user', 'company_name', 'description', 'address', 'phone_number', 'website']   
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -68,7 +68,7 @@ class UserSerializer(serializers.ModelSerializer):
 class ServiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Service
-        fields = ['id', 'provider', 'name', 'description', 'price', 'duration']
+        fields = ['id', 'provider', 'name', 'description', 'price', 'duration', 'category']
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
@@ -87,7 +87,7 @@ class PersonSerializer(serializers.ModelSerializer):
         model = Person
         fields = ['id', 'user', 'bio', 'location', 'birth_date']   
 
-class  TranasactionSerializer(serializers.ModelSerializer):
+class  TransactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transaction
         fields = ['id', 'payment', 'transaction_id', 'amount', 'status', 'created_at']

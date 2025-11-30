@@ -8,6 +8,9 @@ from .sterializers import ProfileSerializer, SellerRatingSerializer, CartItemSer
     ReviewSerializer, ProviderSerializer, ServiceSerializer
 
 
+def HomePage(request):
+    return render(request, 'home.html')
+
 class ProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
