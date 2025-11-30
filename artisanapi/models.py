@@ -160,3 +160,15 @@ class SellerRating(models.Model):
 
     def __str__(self):
         return f"Rating of {self.rating} for {self.seller.store_name}"
+    
+
+class Transaction(models.Model):
+    payment = models.ForeignKey(Payment, on_delete=models.CASCADE)
+    description = models.TextField()
+    mode = models.CharField(max_length=50)
+    transaction_date = models.DateTimeField(auto_now_add=True)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    status = models.Choices('Success', 'Failed', 'Pending')
+
+    def __str__(self):
+        return f"Transaction of {self.amount} on {self.transaction_date}"

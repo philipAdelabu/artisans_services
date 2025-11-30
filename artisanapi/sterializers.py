@@ -1,7 +1,8 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Cart, CartItem, Service, Person, \
-         Product, Order, OrderItem, Buyer, Review, Seller, SellerRating, Provider, Profile
+from .models import Cart, CartItem, Service, Person,  Booking, \
+         Product, Order, OrderItem, Buyer, Review, Seller, SellerRating, Provider, Profile, \
+         Payment, Transaction
 
 
 
@@ -84,4 +85,20 @@ class SellerSerializer(serializers.ModelSerializer):
 class PersonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Person
-        fields = ['id', 'user', 'bio', 'location', 'birth_date']    
+        fields = ['id', 'user', 'bio', 'location', 'birth_date']   
+
+class  TranasactionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Transaction
+        fields = ['id', 'payment', 'transaction_id', 'amount', 'status', 'created_at']
+
+class PaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Payment
+        fields = ['id', 'order', 'payment_method', 'amount', 'status', 'created_at']  
+
+
+class BookingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Booking
+        fields = ['id', 'service', 'buyer', 'provider', 'booking_date', 'total_price', 'scheduled_date', 'status', 'created_at']      
